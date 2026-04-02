@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MuralDigital", "MuralDigital.csproj", "{56A84C86-9136-0438-8876-9AB04A4C3416}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{56A84C86-9136-0438-8876-9AB04A4C3416}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56A84C86-9136-0438-8876-9AB04A4C3416}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56A84C86-9136-0438-8876-9AB04A4C3416}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56A84C86-9136-0438-8876-9AB04A4C3416}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {037806CA-D04D-4678-AB4C-AE3D05C493AA}
+	EndGlobalSection
+EndGlobal
