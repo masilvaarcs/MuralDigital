@@ -21,7 +21,7 @@ Feito com 💜 em **.NET 9 MAUI** por **Marcos Silva**
 - [Galeria Complementar em Curadoria](#-galeria-complementar-em-curadoria)
 - [Como Usar o App (Passo a Passo)](#-como-usar-o-app)
   - [1. Tela Principal](#1-tela-principal-)
-  - [2. Preenchendo os Dados](#2-preenchendo-grupos-e-itens-)
+  - [2. Preenchendo Grupos e Itens](#2-preenchendo-grupos-e-itens-)
   - [3. Encurtando URLs](#3-a-mágica-encurtando-urls-)
   - [4. Visualizando o Mural](#4-visualizando-o-mural)
   - [5. Escolhendo o Estilo](#5-escolhendo-o-estilo-)
@@ -51,7 +51,7 @@ https://drive.google.com/file/d/1aBcDeFgHiJkLmNoPqRsTuVwXyZ_0123456789ABCDEF/vie
 
 Agora multiplique isso por 5, 6, 10 links... e tente montar um mural bonito no WhatsApp. O resultado? Uma parede de texto ilegível que ninguém quer abrir.
 
-### O MuralDigital resolve isso em 3 passos
+### O MuralDigital resolve isso em 4 passos
 
 | Problema | Solução |
 | :--- | :--- |
@@ -466,7 +466,7 @@ MuralDigital/
 │
 ├── ⚙️ Services/         ← Regras de negócio
 │   ├── MuralDataService     Persistência JSON local
-│   ├── UrlShortenerService  TinyURL + is.gd (5 estratégias)
+│   ├── UrlShortenerService  TinyURL + is.gd (5 estratégias + fallback para URL original)
 │   └── WhatsAppTextGenerator   4 geradores de estilo
 │
 ├── 🔄 Converters/       ← Conversores XAML
