@@ -119,13 +119,6 @@ public class MuralDataService : IMuralDataService
             Phone = "5551984228067",
             IsDefault = true,
             IsSelected = true
-        },
-        new WhatsAppContact
-        {
-            Name = "Charlie Silva",
-            Phone = "555184472509",
-            IsDefault = false,
-            IsSelected = false
         }
     ];
 }

@@ -28,9 +28,12 @@ $ErrorActionPreference = "Stop"
 $ProjectRoot   = Split-Path -Parent $PSScriptRoot
 $CsprojFile    = Join-Path $ProjectRoot "MuralDigital.csproj"
 $PublishDir    = Join-Path $ProjectRoot "publish"
+$TempArchiveDir = Join-Path $ProjectRoot ".publish-temp"
 $VersaoAtualDir = Join-Path $ProjectRoot "VersaoAtual"
 $DateStamp     = Get-Date -Format "yyyy-MM-dd"
-$ArchiveName   = "MuralDigital_v${Version}_${DateStamp}.7z"
+$ArchiveBaseName = "MuralDigital_v${Version}_${DateStamp}"
+$ArchiveName   = "${ArchiveBaseName}.7z"
+$TempArchivePath = Join-Path $TempArchiveDir $ArchiveName
 $ArchivePath   = Join-Path $VersaoAtualDir $ArchiveName
 
 # ── Validations ────────────────────────────────────────
@@ -96,31 +99,63 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "      OK" -ForegroundColor Green
 
 # ── Step 4: Compress ───────────────────────────────────
-Write-Host "[4/5] Comprimindo com 7-Zip..." -ForegroundColor Yellow
+Write-Host "[4/6] Comprimindo com 7-Zip (temporario)..." -ForegroundColor Yellow
 
 # Criar pasta VersaoAtual se não existir
 if (-not (Test-Path $VersaoAtualDir)) {
     New-Item -ItemType Directory -Path $VersaoAtualDir -Force | Out-Null
 }
 
-# Remover arquivo antigo com mesmo nome se existir
-if (Test-Path $ArchivePath) {
-    Remove-Item $ArchivePath -Force
+# Criar pasta temporaria para o zip de saida
+if (-not (Test-Path $TempArchiveDir)) {
+    New-Item -ItemType Directory -Path $TempArchiveDir -Force | Out-Null
 }
 
-& $SevenZip a -t7z -mx=7 $ArchivePath "$PublishDir\*" | Out-Null
+# Remover arquivo temporario antigo com mesmo nome se existir
+if (Test-Path $TempArchivePath) {
+    Remove-Item $TempArchivePath -Force
+}
+
+& $SevenZip a -t7z -mx=7 $TempArchivePath "$PublishDir\*" | Out-Null
 
 if ($LASTEXITCODE -ne 0) {
     Write-Error "Falha ao comprimir com 7-Zip."
     exit 1
 }
 
+if (-not (Test-Path $TempArchivePath)) {
+    Write-Error "Arquivo temporario do .7z nao foi gerado."
+    exit 1
+}
+
+# Publicar para VersaoAtual apenas apos gerar com sucesso
+$FinalArchiveName = $ArchiveName
+$ArchivePath = Join-Path $VersaoAtualDir $FinalArchiveName
+if (Test-Path $ArchivePath) {
+    $TimeStamp = Get-Date -Format "HHmmss"
+    $FinalArchiveName = "${ArchiveBaseName}_${TimeStamp}.7z"
+    $ArchivePath = Join-Path $VersaoAtualDir $FinalArchiveName
+}
+
+Move-Item -Path $TempArchivePath -Destination $ArchivePath -Force
+
 $SizeMB = [math]::Round((Get-Item $ArchivePath).Length / 1MB, 2)
-Write-Host "      OK - $ArchiveName ($SizeMB MB)" -ForegroundColor Green
+Write-Host "      OK - $FinalArchiveName ($SizeMB MB)" -ForegroundColor Green
+
+# Limpar zips antigos somente depois da nova versao estar salva em VersaoAtual
+Write-Host "[5/6] Limpando zips antigos em VersaoAtual..." -ForegroundColor Yellow
+Get-ChildItem -Path $VersaoAtualDir -Filter "*.7z" -File |
+    Where-Object { $_.FullName -ne $ArchivePath } |
+    Remove-Item -Force
+
+Write-Host "      OK" -ForegroundColor Green
 
 # ── Step 5: Cleanup ────────────────────────────────────
-Write-Host "[5/5] Limpando pasta publish temporaria..." -ForegroundColor Yellow
+Write-Host "[6/6] Limpando pasta publish temporaria..." -ForegroundColor Yellow
 Remove-Item $PublishDir -Recurse -Force
+if (Test-Path $TempArchiveDir) {
+    Remove-Item $TempArchiveDir -Recurse -Force
+}
 Write-Host "      OK" -ForegroundColor Green
 
 # ── Summary ────────────────────────────────────────────

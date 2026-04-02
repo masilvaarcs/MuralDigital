@@ -35,3 +35,6 @@ crashlytics-build.properties
 
 # ── User secrets ──
 secrets.json
+
+# ── Imagens brutas (arquivo local) ──
+Docs/Imagens/Originais/*.png
