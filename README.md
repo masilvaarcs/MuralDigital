@@ -622,6 +622,6 @@ Feito com ☕ e .NET MAUI por **Marcos Silva**
 ## 📸 Evidências
 
 <p align="center">
-  <img src="docs/evidencia-card.svg" alt="Evidência do projeto" width="840">
+  <img src="Docs/evidencia-card.svg" alt="Evidência do projeto" width="840">
 </p>
 
