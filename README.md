@@ -618,3 +618,10 @@ Os dados são salvos automaticamente em JSON:
 **MuralDigital** — Porque ninguém merece colar links de 80 caracteres no WhatsApp. 🚀
 
 Feito com ☕ e .NET MAUI por **Marcos Silva**
+
+## 📸 Evidências
+
+<p align="center">
+  <img src="docs/evidencia-card.svg" alt="Evidência do projeto" width="840">
+</p>
+
