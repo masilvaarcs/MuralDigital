@@ -1,0 +1,91 @@
+# MuralDigital — Azure Pipelines CI
+# Código: GitHub (masilvaarcs/MuralDigital)
+# ADO Project: marcosprogramador · Area Path: DotNet
+
+trigger:
+  branches:
+    include:
+      - master
+
+pr:
+  branches:
+    include:
+      - master
+
+resources:
+  repositories:
+    - repository: self
+      type: github
+      name: masilvaarcs/MuralDigital
+      connection: GitHubServiceConnection
+
+pool:
+  vmImage: windows-latest
+
+variables:
+  buildConfiguration: Release
+  targetFramework: net9.0-windows10.0.19041.0
+
+stages:
+
+  # ─────────────────────────────────────────
+  # Stage 1 — Validate (roda em todo PR)
+  # ─────────────────────────────────────────
+  - stage: Validate
+    displayName: Validate — Build + Format
+    jobs:
+      - job: Build
+        displayName: dotnet build + format check
+        steps:
+
+          - task: UseDotNet@2
+            displayName: Install .NET 9
+            inputs:
+              version: '9.x'
+
+          - script: dotnet workload install maui-windows
+            displayName: Install MAUI Windows workload
+
+          - script: dotnet restore MuralDigital.csproj
+            displayName: Restore dependencies
+
+          - script: dotnet build MuralDigital.csproj -f $(targetFramework) -c $(buildConfiguration) --no-restore
+            displayName: Build (net9.0-windows)
+
+          - script: dotnet format MuralDigital.csproj --verify-no-changes --verbosity diagnostic
+            displayName: Check code format (dotnet format)
+
+  # ─────────────────────────────────────────
+  # Stage 2 — Artifact (roda só no merge em main)
+  # ─────────────────────────────────────────
+  - stage: Publish
+    displayName: Publish — Windows self-contained artifact
+    dependsOn: Validate
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    jobs:
+      - job: PublishArtifact
+        displayName: Publish win-x64 self-contained
+        steps:
+
+          - task: UseDotNet@2
+            displayName: Install .NET 9
+            inputs:
+              version: '9.x'
+
+          - script: dotnet workload install maui-windows
+            displayName: Install MAUI Windows workload
+
+          - script: >
+              dotnet publish MuralDigital.csproj
+              -f $(targetFramework)
+              -c $(buildConfiguration)
+              --self-contained true
+              -r win-x64
+              -o $(Build.ArtifactStagingDirectory)/win-x64
+            displayName: Publish self-contained win-x64
+
+          - task: PublishBuildArtifacts@1
+            displayName: Upload artifact to ADO
+            inputs:
+              pathToPublish: $(Build.ArtifactStagingDirectory)/win-x64
+              artifactName: MuralDigital-win-x64

@@ -36,5 +36,8 @@ crashlytics-build.properties
 # ── User secrets ──
 secrets.json
 
+# ── Azure DevOps local credentials ──
+**/.env
+
 # ── Imagens brutas (arquivo local) ──
 Docs/Imagens/Originais/*.png
