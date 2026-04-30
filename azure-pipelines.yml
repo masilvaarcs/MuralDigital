@@ -61,7 +61,7 @@ stages:
   - stage: Publish
     displayName: Publish — Windows self-contained artifact
     dependsOn: Validate
-      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     jobs:
       - job: PublishArtifact
         displayName: Publish win-x64 self-contained
